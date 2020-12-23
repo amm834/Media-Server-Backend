@@ -1,31 +1,41 @@
 const http = require("http");
+const url = require("url");
 
 const routes = {
- GET:{
-  '/':()=>{
-   console.log(' / path and get method')
+ GET: {
+  '/': (req, res)=> {
+   res.writeHead(200, {
+    'Content-Type': 'text/html'
+   });
+   res.end('<h1> / => route and get method.');
   },
-  '/about':()=>{
-   console.log(' /about path and get method')
+  '/about': (req, res)=> {
+   res.writeHead(200, {
+    'Content-Type': 'text/html'
+   });
+   res.end('<h1> /about => route and get method.');
   },
  },
- POST:{
-  '/':()=>{
-   console.log('/ path and  post method')
+ POST: {
+  '/': (req, res)=> {
+   res.writeHead(200, {
+    'Content-Type': 'text/html'
+   });
+   res.end('<h1> / => route and post method.');
   },
-  '/about':()=>{
-   console.log('/about path and  post method')
+  '/about': (req, res)=> {
+   res.writeHead(200, {
+    'Content-Type': 'text/html'
+   });
+   res.end('<h1> /about => route and post method.');
   },
  }
 };
 
 const start = (req, res)=> {
- res.writeHead(200, {
-  'Content-Type': 'text/html'
- });
-  let requestMethod = req.method;
-  let requestPath = req.url;
-  routes[requestMethod][requestPath]();
+ let requestMethod = req.method;
+ let requestPath = url.parse(req.url, true);
+ routes[requestMethod][requestPath.pathname](req, res);
 };
 
 
