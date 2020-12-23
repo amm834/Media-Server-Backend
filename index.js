@@ -13,29 +13,31 @@ const responder = (req, res, params)=> {
 const routes = {
  GET: {
   '/': (req, res)=> {
-   responder(req, res, '<h1> / => route and get method.');
+   let fileName = __dirname + '/index.html';
+   responder(req, res, fileName);
   },
-  '/about': (req, res)=> {
-   responder(req, res, '<h1> /about => route and get method.');
-  },
+  '/index.html': (req, res)=> {
+   let fileName = __dirname + '/index.html';
+   responder(req, res, fileName)
+  }
  },
- 
+
  POST: {
-  
-  '/api/login':(req,res)=>{
+
+  '/api/login': (req, res)=> {
    let body = '';
-   req.on('data',data=>{
+   req.on('data', data=> {
     body += data;
    });
-   req.on('end',()=>{
+   req.on('end', ()=> {
     let reqData = qs.parse(body);
     console.log(reqData);
     res.end();
    })
   }
-  
+
  },
- 
+
  NA: (req, res)=> {
   responder('<h1>404 Not Found!</h1>');
  }
@@ -46,9 +48,9 @@ const start = (req, res)=> {
  let params = url.parse(req.url, true);
  let resolveRoute = routes[requestMethod][params.pathname];
  if (resolveRoute != null && resolveRoute != undefined) {
-  resolveRoute(req, res, params);
+  resolveRoute(req, res);
  } else {
-  routes['NA'](req, res, params);
+  routes['NA'](req, res);
  }
 };
 
