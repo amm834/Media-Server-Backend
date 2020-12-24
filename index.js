@@ -13,32 +13,42 @@ let requestFileType = {
  '.jpg': 'image/jpeg',
 };
 
+let isFileExist = (filePath)=> {
+ return new Promise((resolve, reject)=> {
+  fs.access(filePath, (err)=> {
+   if (err) reject(err);
+   else resolve(filePath);
+  });
+ });
+};
+
+let readFile = (filePath)=> {
+ return new Promise((resolve,
+  reject)=> {
+  fs.readFile(filePath,
+   (err, data)=> {
+    if (err) reject(err);
+    else resolve(data);
+   });
+ });
+};
+
 let router = (req, res)=> {
  let uriRoute = url.parse(req.url, true);
- let oriPath = uriRoute.pathname == '/' ? '/index.html' : uriRoute.pathname;
+ let oriPath = uriRoute.pathname == '/' ? '/index.html': uriRoute.pathname;
  let filePath = __dirname + oriPath;
  let extName = path.extname(filePath);
- fs.access(filePath, fs.F_OK, (err)=> {
-  if (err) {
-   res.writeHead(404, {
-    'Content-Type': 'text/html'
-   });
-   res.end('<h1>File Not Found</h1>');
-  } else {
-   fs.readFile(filePath, (err, data)=> {
-    if (err) {
-     res.writeHead(403, {
-      'Content-Type': 'text/html'
-     });
-     res.end('<h1>File Cannot Read!</h1>');
-    } else {
-     res.writeHead(404, {
-      'Content-Type': requestFileType[extName]
-     });
-     res.end(data);
-    }
-   });
-  }
+ isFileExist(filePath)
+ .then(readFile)
+ .then(data => {
+  res.writeHead(200,
+   {
+    'content-type': requestFileType[extName]});
+  res.end(data);
+ })
+ .catch(err=> {
+  res.writeHead(404);
+  res.end('404 not found!');
  });
 };
 
