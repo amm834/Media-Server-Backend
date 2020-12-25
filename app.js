@@ -3,6 +3,10 @@ const path = require('path');
 var bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
+var hogan = require('hogan-express');
+
+app.engine('html',hogan);
+app.set('view engine','html');
 
 //app.use(express.static(path.join(__dirname)));
 
@@ -21,11 +25,11 @@ app.post('/api/login',(req,res)=>{
 })
 
 app.get('/', (req, res) => {
- res.sendFile(path.join(__dirname, 'index.html'));
+ res.render('index');
 });
 
 app.get('/index', (req, res)=> {
- res.sendFile(__dirname + '/index.html')
+ res.render('index')
 })
 
 //get query params
