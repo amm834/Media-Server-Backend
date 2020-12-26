@@ -15,7 +15,12 @@ app.get('/',(req,res)=>{
 
 io.on('connection',socket=>{
  socket.on('login',data=>{
- io.emit('login-success',`${data} successfully Logged In!`);
+ io.emit('login-success',`${data} Successfully Logged In!`);
+ 
+ socket.on('chat-message',data=>{
+  io.emit('income-chat-message',data);
+ });
+ 
  })
 })
 

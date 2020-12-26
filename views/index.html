@@ -28,31 +28,64 @@
 
  <div class="container-fluid my-5 d-none chatHandler">
   <h1 class="display-6 text-center my-3">Chat Box</h1>
-  <div class="input-group mb-3">
-   <input type="text" class="form-control" placeholder="Type Something...">
-   <button class="btn btn-primary ml-1">Send</button>
-  </div>
+ <p id="show-chat-message">
+  
+ </p>
+  <form name="chatboxForm">
+   <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Type Something..." name="message">
+    <button class="btn btn-primary ml-1" type="submit">Send</button>
+   </div>
+
+  </form>
  </div>
 
  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
  <script src="/socket.io/socket.io.js">
  </script>
  <script>
+ // login form
   let loginForm = document.forms['loginForm'];
   let username = loginForm['username'];
+  //chatbox form
+  let chatboxForm = document.forms['chatboxForm'];
+  let message = chatboxForm['message'];
+  
+  let loginHandler = document.querySelector('.loginHandler');
+  let chatHandler = document.querySelector('.chatHandler');
   
   var socket = io();
   // Login Event
-  loginForm.onsubmit = (e)=>{
+  loginForm.onsubmit = (e)=> {
    e.preventDefault();
-   socket.emit('login',username.value);
+   socket.emit('login', username.value);
   }
   // Server Resopnse Event Listen
-  socket.on('login-success',data=>{
-   if(data){
-    alert(data)
+  socket.on('login-success', data=> {
+   if (data) {
+    loginHandler.classList.add('d-none');
+    chatHandler.classList.remove('d-none');
    }
   })
+  
+ chatboxForm.onsubmit = (e)=>{
+  e.preventDefault();
+  socket.emit('chat-message',message.value);
+   message.value = '';
+ }
+ 
+ let showMsg = document.querySelector('#show-chat-message');
+
+ socket.on('income-chat-message',msg=>{
+  
+  /*
+  let data = showMsg.innerText;
+  showMsg.innerText = data + '\n' + msg;
+  */
+ 
+  showMsg.innerText += msg + '\n';
+ })
+ 
  </script>
 </body>
 </html>
