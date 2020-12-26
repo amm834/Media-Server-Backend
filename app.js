@@ -13,4 +13,10 @@ app.get('/',(req,res)=>{
  res.render('index')
 });
 
+io.on('connection',socket=>{
+ socket.on('login',data=>{
+ io.emit('login-success',`${data} successfully Logged In!`);
+ })
+})
+
 server.listen(process.env.PORT);

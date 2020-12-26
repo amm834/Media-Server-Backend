@@ -1,13 +1,58 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <meta http-equiv="X-UA-Compatible" content="ie=edge">
- <title>Document</title>
+ <!-- Required meta tags -->
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <!-- Bootstrap CSS -->
+ <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+ <script src="./views/eruda.js" type="text/javascript" charset="utf-8">
+ </script>
+ <script>
+  eruda.init();
+ </script>
+ <title>Chat Box</title>
 </head>
 <body>
- <h1>Index Page</h1>
- <img src="./assets/images/cat1.jpg" alt="Image" height="200" />
+
+ <div class="container my-5 loginHandler">
+  <h1 class="display-6 text-center my-3">Login Account</h1>
+  <form name="loginForm">
+   <div class="input-group mb-3">
+    <span class="input-group-text" id="basic-addon1">@</span>
+    <input type="text" class="form-control" placeholder="Username" name="username">
+   </div>
+   <button class="btn btn-outline-primary" type="submit">Login</button>
+  </form>
+ </div>
+
+ <div class="container-fluid my-5 d-none chatHandler">
+  <h1 class="display-6 text-center my-3">Chat Box</h1>
+  <div class="input-group mb-3">
+   <input type="text" class="form-control" placeholder="Type Something...">
+   <button class="btn btn-primary ml-1">Send</button>
+  </div>
+ </div>
+
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+ <script src="/socket.io/socket.io.js">
+ </script>
+ <script>
+  let loginForm = document.forms['loginForm'];
+  let username = loginForm['username'];
+  
+  var socket = io();
+  // Login Event
+  loginForm.onsubmit = (e)=>{
+   e.preventDefault();
+   socket.emit('login',username.value);
+  }
+  // Server Resopnse Event Listen
+  socket.on('login-success',data=>{
+   if(data){
+    alert(data)
+   }
+  })
+ </script>
 </body>
 </html>
